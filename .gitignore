@@ -1,0 +1,23 @@
+# Credentials
+.env
+.env.*
+!.env.example
+
+# Local run records and test scratch
+.hexa/
+
+# Python
+.venv/
+__pycache__/
+*.py[oc]
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+*.egg-info/
+
+# Editors and OS
+.idea/
+.vscode/
+.DS_Store
+*.log

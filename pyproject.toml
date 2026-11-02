@@ -1,0 +1,41 @@
+[project]
+name = "hexa"
+version = "0.1.0"
+description = "OpenHEXA workspace exploration and connected-local pipeline execution"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "rich>=15.0.0",
+    "typer>=0.27.3",
+]
+
+[project.scripts]
+hexa = "hexa.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.9.26,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+source-include = ["tests/**/*.py", "tests/**/*.json", "examples/webapp/*", "skills/**/*.md", ".env.example", "uv.lock"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not integration'"
+markers = [
+    "integration: opt-in; needs a workspace or a cached runtime image",
+    "api: reads the workspace named by HEXA_INTEGRATION_CONFIG",
+    "container: runs the pinned runtime image already in the local Podman cache",
+]
+
+[tool.pyrefly]
+project-includes = ["src/**/*.py", "tests/**/*.py"]
+project-excludes = [".hexa", ".venv"]
+
+[dependency-groups]
+dev = [
+    "openhexa-sdk==2.23.0",
+    "pyrefly>=1.4.0",
+    "pytest>=9.2.0",
+    "ruff>=0.17.3",
+]
