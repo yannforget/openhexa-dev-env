@@ -1,0 +1,57 @@
+{
+  "id": "00000000-0000-4000-8000-000000000022",
+  "status": "failed",
+  "executionDate": "2026-10-13T18:46:12.934Z",
+  "duration": 30,
+  "version": {
+    "id": "00000000-0000-4000-8000-000000000017",
+    "name": null,
+    "versionNumber": 3
+  },
+  "pipeline": {
+    "id": "00000000-0000-4000-8000-000000000011",
+    "code": "monthly-quality",
+    "workspace": {
+      "slug": "example-workspace"
+    }
+  },
+  "progress": 100,
+  "hasErrorMessages": true,
+  "datasetVersions": [],
+  "outputs": [
+    {
+      "__typename": "BucketObject",
+      "key": "monthly-quality/00000000000000000000000000000017/quality_report.json",
+      "size": 1864
+    },
+    {
+      "__typename": "BucketObject",
+      "key": "monthly-quality/00000000000000000000000000000017/clean_monthly.csv",
+      "size": 507
+    },
+    {
+      "__typename": "BucketObject",
+      "key": "monthly-quality/00000000000000000000000000000017/quality_report.html",
+      "size": 1417
+    },
+    {
+      "__typename": "BucketObject",
+      "key": "monthly-quality/00000000000000000000000000000017/clean_monthly.parquet",
+      "size": 2124
+    },
+    {
+      "__typename": "BucketObject",
+      "key": "monthly-quality/00000000000000000000000000000017/analytical_monthly.parquet",
+      "size": 834534
+    }
+  ],
+  "omissions": "All run config values omitted: not safely classified. Dataset references do not establish input/output roles.",
+  "duration_unit": "seconds",
+  "timed_out": false,
+  "log_tail": [
+    "  File \"/opt/conda/lib/python3.13/site-packages/openhexa/sdk/pipelines/pipeline.py\", line 211, in _execute_tasks",
+    "    raise PipelineRunError(f\"Pipeline {self.name} failed: {e}\")",
+    "openhexa.sdk.pipelines.pipeline.PipelineRunError: Pipeline monthly-quality failed: Synthetic reporting quality gate failed. Inspect quality_report.json; rerun mode=corrected with the same seed."
+  ],
+  "exit_code": 1
+}

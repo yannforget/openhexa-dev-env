@@ -1,0 +1,35 @@
+{
+  "items": [
+    {
+      "id": "00000000-0000-4000-8000-000000000015",
+      "status": "success",
+      "executionDate": "2026-10-31T17:18:14.979Z",
+      "duration": 30,
+      "version": {
+        "id": "00000000-0000-4000-8000-000000000014",
+        "name": "locally-tested-v1",
+        "versionNumber": 1
+      },
+      "pipeline": {
+        "id": "00000000-0000-4000-8000-000000000013",
+        "code": "regional-sales",
+        "workspace": {
+          "slug": "example-workspace"
+        }
+      }
+    }
+  ],
+  "complete": false,
+  "coverage": [
+    {
+      "pipeline_id": "00000000-0000-4000-8000-000000000013",
+      "complete": true,
+      "total_items": 1
+    }
+  ],
+  "pipelines_complete": true,
+  "pipeline_ceiling": 20,
+  "ordering": "recent executions across inspected pipelines only",
+  "total_items": 7,
+  "incomplete_reason": "limit"
+}

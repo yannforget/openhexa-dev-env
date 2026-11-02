@@ -1,0 +1,34 @@
+{
+  "id": "00000000-0000-4000-8000-000000000011",
+  "code": "monthly-quality",
+  "name": "monthly-quality",
+  "description": "ALL DATA SYNTHETIC; no patient data. Rep...",
+  "updatedAt": "2026-10-13T19:04:18.579Z",
+  "workspace": {
+    "slug": "example-workspace"
+  },
+  "currentVersion": {
+    "id": "00000000-0000-4000-8000-000000000012",
+    "timeout": null,
+    "parameters": [
+      {
+        "code": "mode",
+        "name": "mode",
+        "type": "str",
+        "required": true,
+        "multiple": false,
+        "help": "Synthetic only. bad injects reporting defects; corrected regenerates valid ag..."
+      }
+    ]
+  },
+  "tags": [],
+  "permissions": {
+    "update": true,
+    "run": true,
+    "schedule": true
+  },
+  "type": "zipFile",
+  "schedule": null,
+  "scheduledPipelineVersion": null,
+  "omissions": "Parameter defaults and run configuration omitted: potentially sensitive."
+}

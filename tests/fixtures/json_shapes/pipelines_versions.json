@@ -1,0 +1,39 @@
+{
+  "pipeline": {
+    "id": "00000000-0000-4000-8000-000000000011",
+    "code": "monthly-quality",
+    "name": "monthly-quality",
+    "description": "ALL DATA SYNTHETIC; no patient data. Rep...",
+    "updatedAt": "2026-10-13T19:04:18.579Z",
+    "workspace": {
+      "slug": "example-workspace"
+    },
+    "currentVersion": {
+      "id": "00000000-0000-4000-8000-000000000012",
+      "name": null,
+      "versionNumber": 4,
+      "versionName": "v4",
+      "createdAt": "2026-10-13T19:04:18.570Z"
+    },
+    "tags": [],
+    "permissions": {
+      "update": true,
+      "run": true,
+      "schedule": true
+    },
+    "type": "zipFile"
+  },
+  "items": [
+    {
+      "id": "00000000-0000-4000-8000-000000000012",
+      "name": null,
+      "versionNumber": 4,
+      "versionName": "v4",
+      "createdAt": "2026-10-13T19:04:18.570Z"
+    }
+  ],
+  "complete": false,
+  "pages_read": 1,
+  "total_items": 4,
+  "incomplete_reason": "limit"
+}

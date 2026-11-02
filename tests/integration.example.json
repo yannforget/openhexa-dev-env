@@ -1,0 +1,8 @@
+{
+  "credential_file": "../.env",
+  "dataset": "my-test-dataset",
+  "version": "v1",
+  "file": "small-file.csv",
+  "connection": "my-test-connection",
+  "pipeline": "my-test-pipeline"
+}

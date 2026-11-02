@@ -1,0 +1,50 @@
+{
+  "dataset": {
+    "id": "00000000-0000-4000-8000-000000000003",
+    "slug": "demo-monthly-sales-parquet",
+    "name": "Demo Monthly Sales (Parquet)",
+    "description": "Synthetic monthly sales for 2025 across four fictional regions and three prod...",
+    "updatedAt": "2026-10-31T16:47:15.936Z",
+    "workspace": {
+      "slug": "example-workspace"
+    },
+    "permissions": {
+      "update": true,
+      "createVersion": true,
+      "delete": true
+    },
+    "latestVersion": {
+      "id": "00000000-0000-4000-8000-000000000004",
+      "name": "v1",
+      "createdAt": "2026-10-31T16:47:15.936Z",
+      "permissions": {
+        "update": true,
+        "delete": true,
+        "download": true
+      }
+    },
+    "link_id": "00000000-0000-4000-8000-000000000005"
+  },
+  "version": {
+    "id": "00000000-0000-4000-8000-000000000004",
+    "name": "v1",
+    "createdAt": "2026-10-31T16:47:15.936Z",
+    "permissions": {
+      "update": true,
+      "delete": true,
+      "download": true
+    },
+    "dataset_id": "00000000-0000-4000-8000-000000000003"
+  },
+  "file": {
+    "id": "00000000-0000-4000-8000-000000000006",
+    "filename": "monthly_sales.parquet",
+    "uri": "00000000-0000-4000-8000-000000000003/00000000-0000-4000-8000-000000000004/mon...",
+    "contentType": "application/octet-stream",
+    "size": 3649,
+    "path": "monthly_sales.parquet"
+  },
+  "path": "/project/monthly_sales.parquet",
+  "bytes": 3649,
+  "sha256": "870d3f407641e3d95251f20de9915a6d1b7d36d671f4cbee016f9f2498c340ee"
+}

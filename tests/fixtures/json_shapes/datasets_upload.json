@@ -1,0 +1,30 @@
+{
+  "origin": "https://example.invalid",
+  "workspace": "selected",
+  "dataset": {
+    "id": "00000000-0000-4000-8000-000000000002",
+    "slug": "sales",
+    "name": "Sales [bold] [TOKEN withheld]",
+    "workspace": {
+      "slug": "source"
+    },
+    "link_id": "link-00000000-0000-4000-8000-000000000002"
+  },
+  "version": {
+    "id": "00000000-0000-4000-8000-000000000010",
+    "name": "v2",
+    "dataset_id": "00000000-0000-4000-8000-000000000002"
+  },
+  "files": [
+    {
+      "id": "file-a.csv",
+      "filename": "a.csv",
+      "uri": "00000000-0000-4000-8000-000000000002/00000000-0000-4000-8000-000000000010/a.csv",
+      "contentType": "text/csv",
+      "size": 4,
+      "path": "a.csv"
+    }
+  ],
+  "uploaded_file_count": 1,
+  "verified": true
+}

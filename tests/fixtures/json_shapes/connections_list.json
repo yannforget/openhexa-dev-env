@@ -1,0 +1,26 @@
+{
+  "items": [
+    {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "slug": "test-connection",
+      "name": "test connection",
+      "description": "connection description",
+      "updatedAt": "2026-10-30T11:48:12.541Z",
+      "type": "CUSTOM",
+      "fields": [
+        {
+          "code": "url",
+          "secret": false
+        }
+      ],
+      "permissions": {
+        "update": true,
+        "delete": true
+      }
+    }
+  ],
+  "complete": true,
+  "pages_read": 1,
+  "total_items": 1,
+  "pagination": "unpaginated API field"
+}

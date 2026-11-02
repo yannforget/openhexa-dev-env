@@ -1,0 +1,32 @@
+{
+  "origin": "https://example.invalid",
+  "name": "UploadPipelineInput",
+  "kind": "INPUT_OBJECT",
+  "description": "Represents the input for uploading a pipeline.",
+  "fields": [
+    {
+      "name": "workspaceSlug",
+      "type": "String!",
+      "required": true,
+      "description": null
+    },
+    {
+      "name": "pipelineCode",
+      "type": "String",
+      "required": false,
+      "description": null
+    },
+    {
+      "name": "name",
+      "type": "String",
+      "required": false,
+      "description": null
+    },
+    {
+      "name": "files",
+      "type": "[PipelineFileInput!]",
+      "required": false,
+      "description": null
+    }
+  ]
+}

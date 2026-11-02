@@ -1,0 +1,30 @@
+{
+  "items": [
+    {
+      "id": "00000000-0000-4000-8000-000000000007",
+      "dataset": {
+        "id": "00000000-0000-4000-8000-000000000008",
+        "slug": "regional-summary",
+        "name": "Regional summary",
+        "description": "Regional sales summaries.",
+        "updatedAt": "2026-10-31T17:18:41.193Z",
+        "workspace": {
+          "slug": "example-workspace"
+        },
+        "permissions": {
+          "update": true,
+          "createVersion": true,
+          "delete": true
+        },
+        "latestVersion": {
+          "id": "00000000-0000-4000-8000-000000000009",
+          "name": "summary-v2"
+        }
+      }
+    }
+  ],
+  "complete": false,
+  "pages_read": 1,
+  "total_items": 9,
+  "incomplete_reason": "limit"
+}

@@ -1,0 +1,30 @@
+{
+  "id": "00000000-0000-4000-8000-000000000016",
+  "status": "success",
+  "executionDate": "2026-10-13T18:46:54.415Z",
+  "duration": 30,
+  "version": {
+    "id": "00000000-0000-4000-8000-000000000017",
+    "name": null,
+    "versionNumber": 3
+  },
+  "pipeline": {
+    "id": "00000000-0000-4000-8000-000000000011",
+    "code": "monthly-quality",
+    "workspace": {
+      "slug": "example-workspace"
+    }
+  },
+  "progress": 100,
+  "hasErrorMessages": false,
+  "datasetVersions": [],
+  "outputs": [
+    {
+      "__typename": "BucketObject",
+      "key": "monthly-quality/00000000000000000000000000000012/quality_report.json",
+      "size": 573
+    }
+  ],
+  "omissions": "All run config values omitted: not safely classified. Dataset references do n...",
+  "duration_unit": "seconds"
+}

@@ -1,0 +1,17 @@
+{
+  "origin": "https://example.invalid",
+  "workspace": "selected",
+  "dataset": {
+    "id": "00000000-0000-4000-8000-000000000002",
+    "slug": "sales",
+    "name": "Sales [bold] [TOKEN withheld]",
+    "description": "Sales",
+    "workspace": {
+      "slug": "selected"
+    },
+    "permissions": {
+      "createVersion": true
+    },
+    "latestVersion": null
+  }
+}

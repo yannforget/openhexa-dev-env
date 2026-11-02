@@ -1,0 +1,51 @@
+{
+  "origin": "https://example.invalid",
+  "workspace": "selected",
+  "dry_run": true,
+  "target": {
+    "id": "00000000-0000-4000-8000-000000000011",
+    "code": "monthly-quality",
+    "name": "monthly-quality",
+    "currentVersion": {
+      "id": "00000000-0000-4000-8000-000000000012",
+      "name": null,
+      "versionNumber": 4,
+      "versionName": "v4",
+      "createdAt": "2026-10-13T19:04:18.570Z"
+    },
+    "versions": [
+      "v4",
+      "v3"
+    ]
+  },
+  "version_name": "dryrun-check",
+  "files": [
+    {
+      "path": "pipeline.py",
+      "bytes": 3961
+    }
+  ],
+  "bytes": 3961,
+  "payload_bytes": 4543,
+  "sha256": "d466c23ddbc940de447e6e478c6a96fb1242a15754cb7bc45190ced8b1f7b6c8",
+  "transport": "files",
+  "pipeline": {
+    "name": "Connected-local dataset summary",
+    "timeout": null,
+    "parameters": [
+      {
+        "code": "dataset",
+        "type": "Dataset",
+        "required": true,
+        "multiple": false
+      },
+      {
+        "code": "dataset_id",
+        "type": "str",
+        "required": true,
+        "multiple": false
+      }
+    ]
+  },
+  "warnings": []
+}

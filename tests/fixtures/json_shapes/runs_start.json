@@ -1,0 +1,26 @@
+{
+  "origin": "https://example.invalid",
+  "workspace": "selected",
+  "dry_run": true,
+  "pipeline": {
+    "id": "00000000-0000-4000-8000-000000000019",
+    "code": "hexa-deploy-test",
+    "name": "hexa-deploy-test"
+  },
+  "version": {
+    "id": "00000000-0000-4000-8000-000000000020",
+    "name": "v1",
+    "versionNumber": 1
+  },
+  "parameters": [],
+  "defaults_used": [
+    "count",
+    "greeting"
+  ],
+  "unchecked": [],
+  "limitations": "Offline checks only: workspace existence, visibility and connection type were not checked. Dataset references are workspace slugs, not owner-qualified conversions or version pins. File references are workspace files, not dataset-version files or local paths. SDK runtime validation remains authoritative; this does not prove execution is safe or will succeed.",
+  "run": {
+    "id": "00000000-0000-4000-8000-000000000021",
+    "status": "queued"
+  }
+}

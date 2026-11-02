@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "id": "00000000-0000-4000-8000-000000000013",
+      "code": "regional-sales",
+      "name": "Regional sales",
+      "description": "Aggregate pinned synthetic sales into a separa...",
+      "updatedAt": "2026-10-31T17:17:40.514Z",
+      "workspace": {
+        "slug": "example-workspace"
+      },
+      "currentVersion": {
+        "id": "00000000-0000-4000-8000-000000000014",
+        "name": "locally-tested-v1",
+        "versionNumber": 1,
+        "versionName": "locally-tested-v1 [v1]",
+        "createdAt": "2026-10-31T17:17:40.541Z"
+      },
+      "tags": [],
+      "permissions": {
+        "update": true,
+        "run": true,
+        "schedule": true
+      },
+      "type": "zipFile"
+    }
+  ],
+  "complete": true,
+  "pages_read": 1,
+  "total_items": 2
+}

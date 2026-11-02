@@ -1,0 +1,22 @@
+{
+  "run_id": "00000000-0000-4000-8000-000000000016",
+  "pipeline": {
+    "id": "00000000-0000-4000-8000-000000000011",
+    "code": "monthly-quality",
+    "workspace": {
+      "slug": "example-workspace"
+    }
+  },
+  "kind": "messages",
+  "items": [
+    {
+      "timestamp": "2026-10-13T18:47:23.031581+00:00",
+      "priority": "INFO",
+      "message": "Published SYNTHETIC quality_report.json, accepted-row CSV/Parquet, analytical..."
+    }
+  ],
+  "truncated": true,
+  "server_side_bounds": false,
+  "response_byte_limit": 16777216,
+  "warning": "API logs/messages are unpaginated; full field transferred up to client respon..."
+}
