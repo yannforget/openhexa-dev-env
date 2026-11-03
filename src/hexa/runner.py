@@ -132,6 +132,13 @@ def startup_hint(config: Config, status: int, diagnostics: list[str]) -> str | N
         target = line.removeprefix("hexa: cannot read ").rsplit(" (", 1)[0]
         mounts = {"/source": config.source}
         mounts.update({"/inputs/" + m.name: m for m in config.inputs})
+        if config.local_resources:
+            mounts.update(
+                {
+                    f"/local-datasets/{i}": d.mount
+                    for i, d in enumerate(config.local_resources.datasets)
+                }
+            )
         mount = next(
             (
                 m
@@ -211,6 +218,15 @@ def container_mounts(
         *((m, "/inputs/" + m.name) for m in config.inputs),
     ]:
         mounts.append((target, mount.path, "ro" + (",z" if mount.relabel else "")))
+    if config.local_resources:
+        for index, dataset in enumerate(config.local_resources.datasets):
+            mounts.append(
+                (
+                    f"/local-datasets/{index}",
+                    dataset.mount.path,
+                    "rw" + (",z" if dataset.mount.relabel else ""),
+                )
+            )
     return mounts
 
 
@@ -223,12 +239,29 @@ def run(config: Config, credentials: Credentials) -> dict:
     outputs occupy a unique tool-owned directory per invocation, labelled
     privately (`:Z`).
     """
-    mounts = (config.source, *config.inputs)
+    resources = config.local_resources
+    dataset_mounts = tuple(d.mount for d in resources.datasets) if resources else ()
+    mounts = (config.source, *config.inputs, *dataset_mounts)
+    connection_values = resources.secret_values() if resources else ()
+    redactor = Redactor(credentials.token, connection_values)
+    if resources:
+        print(
+            redactor.text(
+                "Local resource overrides: " + json.dumps(resources.provenance())
+            ),
+            file=sys.stderr,
+        )
+        print(
+            "Selected dataset directories are LIVE WRITABLE mounts. Unmatched resources and unrelated remote writes remain connected.",
+            file=sys.stderr,
+        )
     for mount in mounts:
         if mount.relabel:
             print(
-                f"SELinux label {mount.label_mode} (shared) on {mount.path}; "
-                "the first run over a large directory can take a while",
+                redactor.text(
+                    f"SELinux label {mount.label_mode} (shared) on {mount.path}; "
+                    "the first run over a large directory can take a while"
+                ),
                 file=sys.stderr,
             )
     if config.podman[0] == "distrobox-host-exec":
@@ -308,8 +341,7 @@ def run(config: Config, credentials: Credentials) -> dict:
             "/source/" + config.entrypoint,
         ]
     )
-    redactor = Redactor(credentials.token)
-    print(f"Local run {run_id}; outputs: {output}", file=sys.stderr)
+    print(redactor.text(f"Local run {run_id}; outputs: {output}"), file=sys.stderr)
     log_file = directory / "log.txt"
     record_file = directory / "run.json"
     started = datetime.now(UTC)
@@ -331,7 +363,20 @@ def run(config: Config, credentials: Credentials) -> dict:
             try:
                 process.stdin.write(
                     json.dumps(
-                        {"token": credentials.token, "parameters": config.parameters}
+                        {
+                            "token": credentials.token,
+                            "parameters": config.parameters,
+                            **(
+                                {
+                                    "local_resources": {
+                                        "datasets": resources.manifest(),
+                                        "connections": resources.connections,
+                                    }
+                                }
+                                if resources
+                                else {}
+                            ),
+                        }
                     )
                     + "\n"
                 )
@@ -352,7 +397,11 @@ def run(config: Config, credentials: Credentials) -> dict:
             raise
         if status < 0:
             status = 128 - status
-        writes = _read_ledger(record / "writes.jsonl")
+        writes = redactor.value(_read_ledger(record / "writes.jsonl"))
+        if (record / "writes.jsonl").exists():
+            (record / "writes.jsonl").write_text(
+                "".join(json.dumps(entry) + "\n" for entry in writes)
+            )
         closing = [summarise_writes(writes), f"Log: {log_file}"]
         hint = startup_hint(config, status, diagnostics.lines)
         if hint is not None:
@@ -363,23 +412,28 @@ def run(config: Config, credentials: Credentials) -> dict:
     ended = datetime.now(UTC)
     record_file.write_text(
         json.dumps(
-            {
-                "run_id": run_id,
-                "source": {
-                    "path": str(config.source.path),
-                    "sha256": source_digest(config.source.path),
-                },
-                "entrypoint": config.entrypoint,
-                "parameters": _recorded_parameters(config),
-                "image": config.image,
-                "started_at": started.isoformat(),
-                "ended_at": ended.isoformat(),
-                "duration_seconds": round(time.monotonic() - clock, 3),
-                "exit_code": status,
-                "remote_writes": writes,
-            },
+            redactor.value(
+                {
+                    "run_id": run_id,
+                    "source": {
+                        "path": str(config.source.path),
+                        "sha256": source_digest(config.source.path),
+                    },
+                    "entrypoint": config.entrypoint,
+                    "parameters": _recorded_parameters(config),
+                    "image": config.image,
+                    "started_at": started.isoformat(),
+                    "ended_at": ended.isoformat(),
+                    "duration_seconds": round(time.monotonic() - clock, 3),
+                    "exit_code": status,
+                    "remote_writes": writes,
+                    **(
+                        {"local_resources": resources.provenance()} if resources else {}
+                    ),
+                }
+            ),
             indent=2,
-        ).replace(credentials.token, "[TOKEN withheld]")
+        )
         + "\n",
         encoding="utf-8",
     )
@@ -394,4 +448,4 @@ def run(config: Config, credentials: Credentials) -> dict:
     }
     if hint is not None:
         result["hint"] = hint
-    return result
+    return redactor.value(result)

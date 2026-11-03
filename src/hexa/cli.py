@@ -4,6 +4,7 @@ import io
 import json
 import logging
 import sys
+from dataclasses import replace
 from pathlib import Path
 from typing import Annotated, Any
 
@@ -23,6 +24,7 @@ from .config import (
 from .doctor import hosted_image, local_report
 from .output import Result, render, safe_value
 from .parameters import inspect_pipeline, reject_secret_overrides, validate_parameters
+from .resources import load_resources
 from .runner import run
 from .security import Redactor
 
@@ -80,6 +82,20 @@ def run_command(
     ] = None,
     parameters: ParametersOption = None,
     replacements: SetOption = None,
+    local_datasets: Annotated[
+        list[str] | None,
+        typer.Option(
+            "--local-dataset",
+            help="SLUG=DATASET_DIR; repeatable. Version subdirectories, natural name order; local writes enabled.",
+        ),
+    ] = None,
+    connections_file: Annotated[
+        Path | None,
+        typer.Option(
+            "--connections-file",
+            help="Private literal connection dotenv file; caller-relative, never auto-discovered.",
+        ),
+    ] = None,
     config: ConfigOption = None,
     json_output: JsonOption = False,
 ) -> Result:
@@ -89,6 +105,15 @@ def run_command(
     assert invocation.credentials is not None
     overrides = tuple(replacements or ())
     settings = Config.from_project(project, directory, parameters, overrides)
+    if local_datasets or connections_file is not None:
+        settings = replace(
+            settings,
+            local_resources=load_resources(
+                settings,
+                tuple(local_datasets or ()),
+                connections_file,
+            ),
+        )
     codes = (
         set(settings.parameters)
         if parameters is not None

@@ -18,6 +18,13 @@ def test_installed_wheel_is_self_contained_and_distributions_exclude_secrets(
         members = archive.namelist()
         assert "hexa/runtime/bootstrap.py" in members
         assert "hexa/runtime/sitecustomize.py" in members
+        assert {
+            "hexa/resources.py",
+            "hexa/runtime/resource_manifest.py",
+            "hexa/runtime/local_datasets.py",
+            "hexa/runtime/local_connections.py",
+            "hexa/runtime/file_server.py",
+        } <= set(members)
         assert "hexa/cli.py" in members
         assert "hexa/py.typed" in members
         metadata_path = next(
@@ -60,6 +67,15 @@ def test_installed_wheel_is_self_contained_and_distributions_exclude_secrets(
         timeout=10,
     )
     assert result.stdout.startswith("Usage: hexa ") and "datasets" in result.stdout
+    result = subprocess.run(
+        [str(installed_hexa), "run", "--help"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert "--local-dataset" in result.stdout and "--connections-file" in result.stdout
     result = subprocess.run(
         [str(installed_hexa), "webapps", "create", "--help"],
         cwd=tmp_path,

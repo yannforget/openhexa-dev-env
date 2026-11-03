@@ -1,5 +1,6 @@
 """Fail-closed, development-only SDK local reporting startup."""
 
+import importlib
 import json
 import logging
 import os
@@ -43,6 +44,44 @@ def ledger_entry(field: str, data: object) -> dict:
     return entry
 
 
+def _safe_ledger(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {key: _safe_ledger(item) for key, item in value.items()}
+    if isinstance(value, str):
+        keys = json.loads(os.environ.get("HEXA_LOCAL_CONNECTION_KEYS", "[]"))
+        secrets = [
+            os.environ.get("HEXA_TOKEN", ""),
+            *(
+                os.environ.get(key, "")
+                for key in keys
+                if any(key.startswith(root + "_") for root in keys if root != key)
+            ),
+        ]
+        for secret in list(secrets):
+            if secret.lstrip().startswith("{"):
+                try:
+                    parsed = json.loads(secret)
+                except ValueError:
+                    continue
+                if isinstance(parsed, dict):
+                    secrets.extend(
+                        item for item in parsed.values() if isinstance(item, str)
+                    )
+        secrets.extend(line for secret in list(secrets) for line in secret.splitlines())
+        for secret in sorted(set(secrets), key=len, reverse=True):
+            if secret:
+                value = value.replace(secret, "[withheld]")
+        value = re.sub(
+            r"/[A-Za-z0-9_-]{43}(?=/|[\s'\"<>]|$)(?:/[^\s'\"<>]*)?",
+            "[LOCAL URL withheld]",
+            value,
+        )
+        return re.sub(
+            r"https?://[^\s\"<>]+", "[URL withheld]", value, flags=re.IGNORECASE
+        )
+    return value
+
+
 def record_write(field: str, response: Any) -> None:
     """Append one ledger line to the tool-owned record mount, if the launcher set one."""
     directory = os.environ.get("HEXA_RECORD_DIR")
@@ -54,7 +93,7 @@ def record_write(field: str, response: Any) -> None:
         data = None
     # One short append per line keeps concurrent task processes from interleaving.
     with open(os.path.join(directory, "writes.jsonl"), "a", encoding="utf-8") as ledger:
-        ledger.write(json.dumps(ledger_entry(field, data)) + "\n")
+        ledger.write(json.dumps(_safe_ledger(ledger_entry(field, data))) + "\n")
 
 
 class AdapterRefused(RuntimeError):
@@ -125,6 +164,10 @@ if os.environ.get("HEXA_CONNECTED_LOCAL") == "1":
             return response
 
         requests.Session.request = request
+        if "HEXA_LOCAL_CONNECTION_KEYS" in os.environ:
+            importlib.import_module("local_connections").restore()
+        if "HEXA_LOCAL_DATASETS" in os.environ:
+            importlib.import_module("local_datasets").restore()
         adapter_ready = True
     except AdapterRefused as error:
         print(f"hexa: startup adapter refused: {error}", file=sys.stderr)

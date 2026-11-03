@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+import requests
 
 from hexa.config import load_credentials
 
@@ -182,6 +183,60 @@ def test_unreadable_input_prints_a_hint_not_a_traceback(
     assert result["exit_code"] == 77
     assert "hexa: cannot read /inputs/data (permission denied)" in stderr
     assert "Hint: A mount is unreadable" in stderr and "Traceback" not in stderr
+
+
+@pytest.mark.parametrize("fail", [False, True])
+def test_installed_wheel_local_resources_without_remote_access(
+    installed_hexa: Path, podman_mode: dict[str, str], fail: bool
+):
+    config, source, data = prepare(podman_mode)
+    shutil.copy(FIXTURES / "local_resources_pipeline.py", source / "pipeline.py")
+    data["parameters"] = {"fail": fail}
+    config.write_text(json.dumps(data))
+    dataset = config.parent / "population"
+    for version in ("v2", "v10"):
+        (dataset / version).mkdir(parents=True)
+        (dataset / version / "data.csv").write_bytes(b"value\n42\n")
+    connections = config.parent / "connections.env"
+    connections.write_text(
+        "LOCAL_DHIS=DHIS2\nLOCAL_DHIS_URL=https://example.invalid\nLOCAL_DHIS_USERNAME=fixture-user\nLOCAL_DHIS_PASSWORD=fixture-password\n"
+    )
+    process = subprocess.run(
+        [
+            str(installed_hexa),
+            "run",
+            "--config",
+            str(config),
+            "--local-dataset",
+            f"population={dataset}",
+            "--connections-file",
+            str(connections),
+            "--json",
+        ],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert process.returncode == (1 if fail else 0), process.stderr
+    result = json.loads(process.stdout)
+    assert result["exit_code"] == process.returncode and result["remote_writes"] == []
+    assert (dataset / "v11" / "nested" / "result.txt").read_bytes() == b"local output"
+    retained = (
+        Path(result["record_file"]).read_text() + Path(result["log_file"]).read_text()
+    )
+    assert "fixture-password" not in process.stdout + process.stderr + retained
+    assert "synthetic-token" not in process.stdout + process.stderr + retained
+    if fail:
+        assert "Synthetic local resource failure" in process.stderr
+    else:
+        report = json.loads(
+            (Path(result["output_directory"]) / "resources.json").read_text()
+        )
+        assert report["source_readonly"] and report["latest"] == "v11"
+        with pytest.raises(requests.ConnectionError):
+            requests.get(report["download_url"], timeout=1)
 
 
 @pytest.mark.api

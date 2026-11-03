@@ -5,8 +5,11 @@ import re
 import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from urllib.parse import urlsplit
+
+if TYPE_CHECKING:
+    from .resources import LocalResources
 
 # Version tag and SDK of the pinned digest, as published on Docker Hub.
 PINNED_IMAGE_VERSION = "1.18.1 (openhexa.sdk 2.23.0)"
@@ -208,6 +211,7 @@ class Config:
     parameters: dict[str, Any]
     inputs: tuple[Mount, ...]
     podman: tuple[str, ...]
+    local_resources: "LocalResources | None" = field(default=None, repr=False)
 
     @classmethod
     def load(cls, path: Path) -> "Config":
